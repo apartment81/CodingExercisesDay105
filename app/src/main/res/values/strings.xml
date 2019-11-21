@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ChoiceQuiz</string>
+    <string name="choice_quiz">Choice Quiz</string>
+    <string name="bt_start_quiz">start quiz</string>
+    <string name="highscore">Highscore:  </string>
+    <string name="score_0">Score: 0</string>
+    <string name="_00_30">00:30</string>
+</resources>
