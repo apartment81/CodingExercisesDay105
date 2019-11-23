@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +30,12 @@ public class QuizActivity extends AppCompatActivity {
 
     public static final long COUNTDOWN_IN_MILLIS = 30000;
 
+    public static final String KEY_SCORE ="keyScore";
+    public static final String KEY_QUESTION_COUNT ="keyCount";
+    public static final String KEY_MILLIS_LEFT ="keyTimer";
+    public static final String KEY_ANSWERED ="keyAns";
+    public static final String KEY_QUESTION_LIST ="keyQL";
+
 
     private TextView tvQuestion;
     private TextView tvScore;
@@ -37,7 +47,7 @@ public class QuizActivity extends AppCompatActivity {
     private RadioButton rb3;
     private Button buttonSubmit;
 
-    private List<Questions> questionList;
+    private ArrayList<Questions> questionList;
 
     private ColorStateList textColorDefaultRb;
     private ColorStateList textColorDefaultCountdown;
@@ -73,13 +83,35 @@ public class QuizActivity extends AppCompatActivity {
         textColorDefaultRb = rb1.getTextColors();
         textColorDefaultCountdown = tvTimer.getTextColors();
 
-        QuizDbHelper dbHelper = new QuizDbHelper(this);
-        questionList = dbHelper.getAllQuestions();
 
-        questionCountTotal = questionList.size();
-        Collections.shuffle(questionList);
+        //execute only if there is no savedInstance , first start
+        if(savedInstanceState == null) {
+            QuizDbHelper dbHelper = new QuizDbHelper(this);
+            questionList = dbHelper.getAllQuestions();
+            questionCountTotal = questionList.size();
+            Log.v("QuizActivity", "quizcounter-list> " +questionCountTotal );
+            Collections.shuffle(questionList);
 
-        showNextQuestion();
+            showNextQuestion();
+        }else {
+            questionList = savedInstanceState.getParcelableArrayList(KEY_QUESTION_LIST);
+            questionCountTotal = questionList.size();
+            Log.v("QuizActivity", "quizcounter-list: " +questionCountTotal );
+            questionCounter = savedInstanceState.getInt(KEY_QUESTION_COUNT);
+            //questionCounter starts at 1 and the questionCounter index starts at 0
+            currentQuestion  = questionList.get(questionCounter - 1);
+            score = savedInstanceState.getInt(KEY_SCORE);
+            timeLeftInMillis = savedInstanceState.getLong(KEY_MILLIS_LEFT);
+            answered = savedInstanceState.getBoolean(KEY_ANSWERED);
+
+            if(!answered) {
+                startCountDown();
+            }else {
+                updateTimerText();
+                showSolution();
+            }
+
+        }
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +195,7 @@ public class QuizActivity extends AppCompatActivity {
         answered = true;
 
         //stop counter is
-       // mCountDownTimer.cancel();
+        mCountDownTimer.cancel();
         RadioButton rbSelected = findViewById(mRadioGroup.getCheckedRadioButtonId());
         int answerNr = mRadioGroup.indexOfChild(rbSelected) + 1;
 
@@ -197,8 +229,10 @@ public class QuizActivity extends AppCompatActivity {
 
         if (questionCounter < questionCountTotal) {
             buttonSubmit.setText("Next");
+          //  mCountDownTimer.cancel();
         } else {
             buttonSubmit.setText("Finish");
+          //  mCountDownTimer.cancel();
         }
     }
 
@@ -229,5 +263,18 @@ public class QuizActivity extends AppCompatActivity {
         if(mCountDownTimer !=null){
             mCountDownTimer.cancel();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState ) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(KEY_SCORE, score);
+        outState.putInt(KEY_QUESTION_COUNT, questionCounter);
+        outState.putLong(KEY_MILLIS_LEFT, timeLeftInMillis);
+        outState.putBoolean(KEY_ANSWERED, answered);
+        outState.putParcelableArrayList(KEY_QUESTION_LIST,  questionList);
+
+
     }
 }

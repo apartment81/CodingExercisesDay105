@@ -13,14 +13,16 @@
         android:id="@+id/tv_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/score_0" />
+        android:text="@string/score_0"
+        android:freezesText="true"/>
 
     <TextView
         android:id="@+id/tv_quest_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_score"
-        android:text="Question: 1/x" />
+        android:text="Question: 1/x"
+        android:freezesText="true"/>
 
     <TextView
         android:id="@+id/tv_timer"
@@ -28,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="@string/_00_30"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:freezesText="true"/>
 
 
     <TextView
@@ -39,7 +42,8 @@
         android:layout_margin="@dimen/padding_16"
         android:text=""
         android:textAlignment="center"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:freezesText="true"/>
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -51,19 +55,22 @@
             android:id="@+id/radio_bt1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option 1" />
+            android:text="Option 1"
+            android:freezesText="true"/>
 
         <RadioButton
             android:id="@+id/radio_bt2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option 2" />
+            android:text="Option 2"
+            android:freezesText="true"/>
 
         <RadioButton
             android:id="@+id/radio_bt3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option 3" />
+            android:text="Option 3"
+            android:freezesText="true"/>
 
     </RadioGroup>
 
@@ -74,7 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/radio_group"
         android:layout_marginTop="@dimen/padding_16"
-        android:text="submit" />
+        android:text="submit"
+        android:freezesText="true"/>
 
 
 </RelativeLayout>
